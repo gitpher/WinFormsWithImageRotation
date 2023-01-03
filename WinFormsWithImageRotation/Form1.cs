@@ -3,46 +3,51 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using OpenCvSharp;
 
 namespace WinFormsWithImageRotation
 {
-    public partial class Form1 : Form
+    public partial class ImageRotationForm : Form
     {
-        public Form1()
+        public ImageRotationForm()
         {
             InitializeComponent();
         }
 
         // Are there any better way to import dll? Where should I place these arguments?
         [DllImport("RotateImg.dll")]
-        public extern static Mat readImage([MarshalAs(UnmanagedType.LPStr)]string imgPath);
+        public extern static Mat readImage([MarshalAs(UnmanagedType.LPStr)]string imgPath); // 
 
         [DllImport("RotateImg.dll")]
         public extern static double getRadian(double angle);
 
         [DllImport("RotateImg.dll")]
-        public extern static Mat createDstImg(Mat srcImg, double angle);
+        public extern static Mat createDstImg(Mat srcImg, double angle); // 
 
         [DllImport("RotateImg.dll")]
-        public extern static Mat fillDstImg(Mat dstImg, Mat srcImg, double radian);
+        public extern static Mat fillDstImg(Mat dstImg, Mat srcImg, double radian); // 
 
         // Not sure this is the right way to do it
+        // byte array
         string imgPath;
-        Mat srcImg;
-        Mat dstImg;
+        Image srcImg; // 
+        Image dstImg; //
         double angle;
         double radian;
 
         private void Browse_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Title = "Open Image";
 
             openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*";
 
@@ -52,9 +57,27 @@ namespace WinFormsWithImageRotation
                 
                 ImagePathBox.Text = imgPath;
 
-                srcImg = Cv2.ImRead(imgPath);
+                Image srcImg = Image.FromFile(imgPath);
 
-                OriginalImage.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(srcImg);
+                var ms = new MemoryStream(); // deposit bytes here
+
+                srcImg.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg); // save bytes to ms
+
+                var bytes = ms.ToArray();
+
+                ////////////
+                ////
+                ///
+
+                var imageMemoryStream = new MemoryStream(bytes);
+
+                Image imgFromStream = Image.FromStream(imageMemoryStream);
+
+
+
+
+
+                OriginalImage.Image = srcImg;
             }
         }
 
@@ -64,11 +87,11 @@ namespace WinFormsWithImageRotation
 
             radian = getRadian(angle);
 
-            dstImg = createDstImg(srcImg, radian);
+            //dstImg = createDstImg(srcImg, radian);
 
-            Mat filledDstImg = fillDstImg(dstImg, srcImg, radian);
+            //Mat filledDstImg = fillDstImg(dstImg, srcImg, radian);
 
-            RotatedImage.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(filledDstImg);
+            //RotatedImage.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(filledDstImg);
         }
     }
 }

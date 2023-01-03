@@ -1,6 +1,6 @@
 ﻿namespace WinFormsWithImageRotation
 {
-    partial class Form1
+    partial class ImageRotationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -65,7 +65,7 @@
             // 
             this.OriginalImage.Location = new System.Drawing.Point(100, 210);
             this.OriginalImage.Name = "OriginalImage";
-            this.OriginalImage.Size = new System.Drawing.Size(232, 168);
+            this.OriginalImage.Size = new System.Drawing.Size(232, 218);
             this.OriginalImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.OriginalImage.TabIndex = 2;
             this.OriginalImage.TabStop = false;
@@ -74,7 +74,7 @@
             // 
             this.RotatedImage.Location = new System.Drawing.Point(415, 210);
             this.RotatedImage.Name = "RotatedImage";
-            this.RotatedImage.Size = new System.Drawing.Size(218, 168);
+            this.RotatedImage.Size = new System.Drawing.Size(218, 218);
             this.RotatedImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.RotatedImage.TabIndex = 3;
             this.RotatedImage.TabStop = false;
@@ -122,7 +122,7 @@
             this.ImagePathBox.Size = new System.Drawing.Size(415, 20);
             this.ImagePathBox.TabIndex = 8;
             // 
-            // Form1
+            // ImageRotationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -136,8 +136,8 @@
             this.Controls.Add(this.Rotate);
             this.Controls.Add(this.Browse);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "ImageRotationForm";
+            this.Text = "ImageRotationForm";
             ((System.ComponentModel.ISupportInitialize)(this.OriginalImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RotatedImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RotateDegreeNumericUpDown)).EndInit();
