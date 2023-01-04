@@ -57,27 +57,22 @@ namespace WinFormsWithImageRotation
                 
                 ImagePathBox.Text = imgPath;
 
+
                 Image srcImg = Image.FromFile(imgPath);
-
-                var ms = new MemoryStream(); // deposit bytes here
-
-                srcImg.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg); // save bytes to ms
-
+                
+                // transition from Image to byte array
+                var ms = new MemoryStream();
+                srcImg.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 var bytes = ms.ToArray();
+                
+                // transition from byte array to Image
+                var imgMemoryStream = new MemoryStream(bytes);
 
-                ////////////
-                ////
-                ///
+                Image imgFromStream = Image.FromStream(imgMemoryStream);
 
-                var imageMemoryStream = new MemoryStream(bytes);
-
-                Image imgFromStream = Image.FromStream(imageMemoryStream);
-
-
-
-
-
+                // display Image on OriginalImagePictureBox
                 OriginalImage.Image = srcImg;
+                //OriginalImage.Image = imgFromStream;
             }
         }
 
