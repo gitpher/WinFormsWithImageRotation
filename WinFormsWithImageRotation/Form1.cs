@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using OpenCvSharp;
+using OpenCvSharp.Extensions;
 
 namespace WinFormsWithImageRotation
 {
@@ -25,23 +26,10 @@ namespace WinFormsWithImageRotation
         }
 
         [DllImport("RotateImg.dll")]
-        public static extern byte[] readImg([MarshalAs(UnmanagedType.LPStr)]string imgPath);
+        public static extern IntPtr readImg([MarshalAs(UnmanagedType.LPStr)]string imgPath);
 
         [DllImport("RotateImg.dll")]
         public static extern double getRadian(double angle);
-
-        //////////////////////////////////////
-        private string imgPath;
-        
-        private Image srcImg;
-        private Image dstImg;
-
-        private IntPtr srcImgPtr;
-        private IntPtr dstImgPtr;
-
-        private double angle;
-        private double radian;
-        //////////////////////////////////////
 
         private void Browse_Click(object sender, EventArgs e)
         {
@@ -53,38 +41,23 @@ namespace WinFormsWithImageRotation
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                imgPath = openFileDialog.FileName;
+                string imgPath = openFileDialog.FileName;
                 
                 ImagePathBox.Text = imgPath;
 
-                byte[] bytes = readImg(imgPath);
+                IntPtr srcImgPtr = readImg(imgPath);
 
-                Bitmap bmp;
-                using (var ms = new MemoryStream(bytes))
-                {
-                    bmp = new Bitmap(ms);
-                }
+                Bitmap srcImgbmp = new Bitmap(400, 400, 400 * 3, PixelFormat.Format24bppRgb, srcImgPtr);
 
-                OriginalImage.Image = bmp;
-
-
-
+                OriginalImage.Image= srcImgbmp;
             }
         }
 
         private void Rotate_Click(object sender, EventArgs e)
         {
-            angle = (double) RotateDegreeNumericUpDown.Value;
+            double angle = (double) RotateDegreeNumericUpDown.Value;
 
-            radian = getRadian(angle);
-
-            //dstImg = createDstImg(srcImg, radian);
-
-            //Mat filledDstImg = fillDstImg(dstImg, srcImg, radian);
-
-            //RotatedImage.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(filledDstImg);
+            double radian = getRadian(angle);
         }
-
-        
     }
 }
