@@ -25,11 +25,31 @@ namespace WinFormsWithImageRotation
             InitializeComponent();
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        struct IMAGE
+        {
+            public int width;
+            public int height;
+            public int channels;
+            public IntPtr data; 
+        }
+
         [DllImport("RotateImg.dll")]
-        public static extern IntPtr readImg([MarshalAs(UnmanagedType.LPStr)]string imgPath);
+        public static extern IntPtr readImg([MarshalAs(UnmanagedType.LPStr)] string imgPath);
 
         [DllImport("RotateImg.dll")]
         public static extern double getRadian(double angle);
+
+        [DllImport("RotateImg.dll")]
+        public static extern IntPtr createDstImg(int rows, int cols, double angle);
+
+        [DllImport("RotateImg.dll")]
+        public static extern IntPtr fillDstImg(IntPtr dstImg, IntPtr srcImg, double radian);
+
+        [DllImport("RotateImg.dll")]
+        public static extern IntPtr happyDay();
+
+        IntPtr srcImgPtr;
 
         private void Browse_Click(object sender, EventArgs e)
         {
@@ -45,11 +65,16 @@ namespace WinFormsWithImageRotation
                 
                 ImagePathBox.Text = imgPath;
 
-                IntPtr srcImgPtr = readImg(imgPath);
+                srcImgPtr = readImg(imgPath);
 
-                Bitmap srcImgbmp = new Bitmap(400, 400, 400 * 3, PixelFormat.Format24bppRgb, srcImgPtr);
+                unsafe
+                {
+                    IMAGE* srcImg = (IMAGE*) srcImgPtr.ToPointer();
 
-                OriginalImage.Image= srcImgbmp;
+                    Bitmap srcImgbmp = new Bitmap(srcImg->width, srcImg->height, srcImg->width * 4, PixelFormat.Format32bppArgb, srcImg->data);
+
+                    OriginalImage.Image = srcImgbmp;
+                }
             }
         }
 
@@ -58,6 +83,14 @@ namespace WinFormsWithImageRotation
             double angle = (double) RotateDegreeNumericUpDown.Value;
 
             double radian = getRadian(angle);
+
+            IntPtr dstImgPtr = createDstImg(378, 378, angle);
+
+            // dstImgPtr = fillDstImg(dstImgPtr, srcImgPtr, radian);
+
+            Bitmap dstImgBmp = new Bitmap(378, 378, 378 * 4, PixelFormat.Format32bppArgb, dstImgPtr);
+
+            RotatedImage.Image= dstImgBmp;
         }
     }
 }
