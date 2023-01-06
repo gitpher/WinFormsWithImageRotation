@@ -133,15 +133,15 @@ namespace WinFormsWithImageRotation
         private void Download_Click(object sender, EventArgs e)
         {
             double rotatedDegree = (double)RotateDegreeNumericUpDown.Value;
+            string fileLocation = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads\\";
             string filename = Path.GetFileNameWithoutExtension(imgPath) + "(" + rotatedDegree + "도 회전).png";
-            string fileLocation = @"C:\Users\jun_c\Downloads\";
 
             RotatedImage.Image.Save(fileLocation + filename, ImageFormat.Png);
 
             string title = "이미지 저장 성공";
             string message = "이미지가 저장되었습니다." + "\n" 
                             + "\n" +
-                            "(다운로드 위치: " + fileLocation + filename + ")";
+                            "다운로드 위치: " + fileLocation + filename;
 
             MessageBox.Show(message, title);
         }
