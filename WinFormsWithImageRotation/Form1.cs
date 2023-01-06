@@ -134,13 +134,14 @@ namespace WinFormsWithImageRotation
         {
             double rotatedDegree = (double)RotateDegreeNumericUpDown.Value;
             string filename = Path.GetFileNameWithoutExtension(imgPath) + "(" + rotatedDegree + "도 회전).png";
-            string location = @"C:\Users\jun_c\Downloads\";
+            string fileLocation = @"C:\Users\jun_c\Downloads\";
 
-            RotatedImage.Image.Save(location + filename, ImageFormat.Png);
+            RotatedImage.Image.Save(fileLocation + filename, ImageFormat.Png);
 
             string title = "이미지 저장 성공";
-            string message = "이미지가 저장되었습니다." + "\n" +
-                            "(다운로드 위치: " + location + filename + ")";
+            string message = "이미지가 저장되었습니다." + "\n" 
+                            + "\n" +
+                            "(다운로드 위치: " + fileLocation + filename + ")";
 
             MessageBox.Show(message, title);
         }

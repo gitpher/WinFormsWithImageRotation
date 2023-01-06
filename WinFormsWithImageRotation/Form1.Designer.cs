@@ -58,7 +58,7 @@
             this.Rotate.Name = "Rotate";
             this.Rotate.Size = new System.Drawing.Size(75, 23);
             this.Rotate.TabIndex = 1;
-            this.Rotate.Text = "회전 각도";
+            this.Rotate.Text = "회전";
             this.Rotate.UseVisualStyleBackColor = true;
             this.Rotate.Click += new System.EventHandler(this.Rotate_Click);
             // 
@@ -105,7 +105,7 @@
             // RotateDegreeNumericUpDown
             // 
             this.RotateDegreeNumericUpDown.DecimalPlaces = 1;
-            this.RotateDegreeNumericUpDown.Location = new System.Drawing.Point(492, 56);
+            this.RotateDegreeNumericUpDown.Location = new System.Drawing.Point(491, 56);
             this.RotateDegreeNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
