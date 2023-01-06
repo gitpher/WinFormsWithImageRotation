@@ -44,7 +44,7 @@ namespace WinFormsWithImageRotation
         public static extern IntPtr createDstImg(IntPtr srcImg, double angle);
 
         [DllImport("RotateImg.dll")]
-        public static extern IntPtr fillDstImg(IntPtr dstImg, IntPtr srcImg, double radian);
+        public static extern void fillDstImg(IntPtr dstImg, IntPtr srcImg, double radian);
 
         [DllImport("RotateImg.dll")]
         public static extern IntPtr happyDay();
@@ -74,6 +74,8 @@ namespace WinFormsWithImageRotation
                     Bitmap srcImgbmp = new Bitmap(srcImg->width, srcImg->height, srcImg->width * srcImg->channels, PixelFormat.Format32bppArgb, srcImg->data);
 
                     OriginalImage.Image = srcImgbmp;
+
+                    RotatedImage.Image = srcImgbmp;
                 }
             }
         }
@@ -90,7 +92,7 @@ namespace WinFormsWithImageRotation
             {
                 IMAGE* dstImg = (IMAGE*) dstImgPtr.ToPointer();
 
-                // dstImgPtr = fillDstImg(dstImgPtr, srcImgPtr, radian);
+                fillDstImg(dstImgPtr, srcImgPtr, radian);
 
                 Bitmap dstImgBmp = new Bitmap(dstImg->width, dstImg->height, dstImg->width * dstImg->channels, PixelFormat.Format32bppArgb, dstImg->data);
                 
