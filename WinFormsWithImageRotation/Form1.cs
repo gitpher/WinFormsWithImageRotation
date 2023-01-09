@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels;
 using System.Text;
@@ -29,10 +30,10 @@ namespace WinFormsWithImageRotation
         [StructLayout(LayoutKind.Sequential)]
         struct IMAGE
         {
-            public int width;
-            public int height;
-            public int channels;
-            public IntPtr data; 
+            public int Width;
+            public int Height;
+            public int Channels;
+            public IntPtr Data; 
         }
 
         [DllImport("RotateImg.dll")]
@@ -44,11 +45,15 @@ namespace WinFormsWithImageRotation
         [DllImport("RotateImg.dll")]
         public static extern void deleteImg(IntPtr img);
 
-        int pictureBoxDefaultWidth = 300;
-        int pictureBoxDefaultHeight = 300;
-        string imgPath;
-        IntPtr srcImgPtr;
-        IntPtr dstImgPtr;
+        private string _imgPath;
+        private IntPtr _srcImgPtr;
+        private IntPtr _dstImgPtr;
+
+        private Rectangle _defaultOriginalImageSizeRectangle;
+        private Rectangle _defaultRotatedImageSizeRectangle;
+        private Rectangle _defaultImageRotationFormSizeRectangle;
+        private Rectangle _defaultOriginalImageLabelSizeRectangle;
+        private Rectangle _defaultRotatedImageLabelSizeRectangle;
 
         private void Browse_Click(object sender, EventArgs e)
         {
@@ -60,28 +65,30 @@ namespace WinFormsWithImageRotation
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (srcImgPtr != IntPtr.Zero) deleteImg(srcImgPtr);
+                if (_srcImgPtr != IntPtr.Zero) deleteImg(_srcImgPtr);
 
-                imgPath = openFileDialog.FileName;
+                _imgPath = openFileDialog.FileName;
 
-                ImagePathBox.Text = imgPath;
+                ImagePathBox.Text = _imgPath;
 
-                OriginalImage.Size = new System.Drawing.Size(pictureBoxDefaultWidth, pictureBoxDefaultHeight);
-                RotatedImage.Size = new System.Drawing.Size(pictureBoxDefaultWidth, pictureBoxDefaultHeight);
+                ImageRotationForm_Load(sender, e); ImageRotationForm_Resize(sender, e); // 
+                
+                OriginalImage.Size = new System.Drawing.Size(_defaultOriginalImageSizeRectangle.Width, _defaultOriginalImageSizeRectangle.Height); 
+                RotatedImage.Size = new System.Drawing.Size(_defaultRotatedImageSizeRectangle.Width, _defaultRotatedImageSizeRectangle.Height); 
 
-                srcImgPtr = readImg(imgPath);
+                _srcImgPtr = readImg(_imgPath);
 
                 unsafe
                 {
-                    IMAGE* srcImg = (IMAGE*) srcImgPtr.ToPointer();
+                    IMAGE* srcImg = (IMAGE*) _srcImgPtr.ToPointer();
 
-                    Bitmap srcImgbmp = new Bitmap(srcImg->width, srcImg->height, srcImg->width * srcImg->channels, PixelFormat.Format32bppArgb, srcImg->data);
+                    Bitmap srcImgbmp = new Bitmap(srcImg->Width, srcImg->Height, srcImg->Width * srcImg->Channels, PixelFormat.Format32bppArgb, srcImg->Data);
 
                     OriginalImage.Image = srcImgbmp;
 
                     RotatedImage.Image = srcImgbmp;
 
-                    double aspectRatio = srcImg->width / (double)srcImg->height;
+                    double aspectRatio = srcImg->Width / (double)srcImg->Height;
 
                     if (aspectRatio > 1)
                     {
@@ -101,28 +108,28 @@ namespace WinFormsWithImageRotation
 
         private void Rotate_Click(object sender, EventArgs e)
         {
-            if (dstImgPtr != IntPtr.Zero) deleteImg(dstImgPtr);
+            if (_dstImgPtr != IntPtr.Zero) deleteImg(_dstImgPtr);
 
             double angle = (double) RotateDegreeNumericUpDown.Value;
 
-            dstImgPtr = RotateImg(srcImgPtr, angle);
+            _dstImgPtr = RotateImg(_srcImgPtr, angle);
 
             unsafe
             {
-                IMAGE* dstImg = (IMAGE*) dstImgPtr.ToPointer();
+                IMAGE* dstImg = (IMAGE*) _dstImgPtr.ToPointer();
 
-                Bitmap dstImgBmp = new Bitmap(dstImg->width, dstImg->height, dstImg->width * dstImg->channels, PixelFormat.Format32bppArgb, dstImg->data);
+                Bitmap dstImgBmp = new Bitmap(dstImg->Width, dstImg->Height, dstImg->Width * dstImg->Channels, PixelFormat.Format32bppArgb, dstImg->Data);
 
-                double aspectRatio = dstImg->width / (double)dstImg->height;
+                double aspectRatio = dstImg->Width / (double)dstImg->Height;
 
                 if (aspectRatio > 1)
                 {
-                    RotatedImage.Width = pictureBoxDefaultWidth;
+                    RotatedImage.Width = _defaultImageRotationFormSizeRectangle.Width;  
                     RotatedImage.Height = (int)(RotatedImage.Width / aspectRatio);
                 }
                 else
                 {
-                    RotatedImage.Height = pictureBoxDefaultHeight;
+                    RotatedImage.Height = _defaultImageRotationFormSizeRectangle.Height; 
                     RotatedImage.Width = (int)(RotatedImage.Height * aspectRatio);
                 }
 
@@ -134,7 +141,7 @@ namespace WinFormsWithImageRotation
         {
             double rotatedDegree = (double)RotateDegreeNumericUpDown.Value;
             string fileLocation = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads\\";
-            string filename = Path.GetFileNameWithoutExtension(imgPath) + "(" + rotatedDegree + "도 회전).png";
+            string filename = Path.GetFileNameWithoutExtension(_imgPath) + "(" + rotatedDegree + "도 회전).png";
 
             RotatedImage.Image.Save(fileLocation + filename, ImageFormat.Png);
 
@@ -144,6 +151,49 @@ namespace WinFormsWithImageRotation
                             "다운로드 위치: " + fileLocation + filename;
 
             MessageBox.Show(message, title);
+        }
+
+        private void ImageRotationForm_Load(object sender, EventArgs e)
+        {
+            _defaultImageRotationFormSizeRectangle = new Rectangle(this.Location.X, this.Location.Y, this.Width, this.Height);
+            _defaultOriginalImageSizeRectangle = new Rectangle(OriginalImage.Location.X, OriginalImage.Location.Y, OriginalImage.Width, OriginalImage.Height);
+            _defaultRotatedImageSizeRectangle = new Rectangle(RotatedImage.Location.X, RotatedImage.Location.Y, RotatedImage.Width, RotatedImage.Height);
+            _defaultOriginalImageLabelSizeRectangle = new Rectangle(OriginalImageLabel.Location.X, OriginalImageLabel.Location.Y, OriginalImageLabel.Width, OriginalImageLabel.Height);
+            _defaultRotatedImageLabelSizeRectangle = new Rectangle(RotatedImageLabel.Location.X, RotatedImageLabel.Location.Y, RotatedImageLabel.Width, RotatedImageLabel.Height);
+        }
+
+        private void Resize_Control(Rectangle rect, Control ctrl)
+        {
+            double horizontalRatio = this.Width / (double)_defaultImageRotationFormSizeRectangle.Width;
+            double verticalRatio = this.Height / (double)_defaultImageRotationFormSizeRectangle.Height;
+
+            int newX = (int)(rect.Location.X * horizontalRatio);
+            int newY = rect.Location.Y;
+
+            int newWidth = (int)(rect.Width * horizontalRatio); 
+            int newHeight = (int)(rect.Height * verticalRatio); 
+
+            ctrl.Location = new System.Drawing.Point(newX, newY);
+            ctrl.Size = new System.Drawing.Size(newWidth, newHeight);
+        }
+
+        private void Reposition_Control(Rectangle rect, Control ctrl)
+        {
+            double horizontalRatio = this.Width / (double)_defaultImageRotationFormSizeRectangle.Width;
+            double verticalRatio = this.Height / (double)_defaultImageRotationFormSizeRectangle.Height;
+
+            int newX = (int)(rect.Location.X * horizontalRatio);
+            int newY = rect.Location.Y;
+
+            ctrl.Location = new System.Drawing.Point(newX, newY);
+        }
+
+        private void ImageRotationForm_Resize(object sender, EventArgs e)
+        {
+            Resize_Control(_defaultOriginalImageSizeRectangle, OriginalImage);
+            Resize_Control(_defaultRotatedImageSizeRectangle, RotatedImage);
+            Reposition_Control(_defaultOriginalImageLabelSizeRectangle, OriginalImageLabel);
+            Reposition_Control(_defaultRotatedImageLabelSizeRectangle, RotatedImageLabel);
         }
     }
 }

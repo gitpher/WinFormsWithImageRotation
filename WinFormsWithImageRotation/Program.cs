@@ -13,8 +13,15 @@ namespace WinFormsWithImageRotation
         static void Main()
         {
             Application.EnableVisualStyles();
+
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ImageRotationForm());
+
+            ImageRotationForm imageRotationForm = new ImageRotationForm
+            {
+                MinimumSize = new System.Drawing.Size(765, 537)
+            };
+
+            Application.Run(imageRotationForm);
         }
     }
 }

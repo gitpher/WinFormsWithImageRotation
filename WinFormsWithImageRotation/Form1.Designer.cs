@@ -34,7 +34,7 @@
             this.RotatedImageLabel = new System.Windows.Forms.Label();
             this.RotateDegreeNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.ImagePathBox = new System.Windows.Forms.TextBox();
-            this.Download = new System.Windows.Forms.Button();
+            this.DownloadButton = new System.Windows.Forms.Button();
             this.Degree = new System.Windows.Forms.Label();
             this.RotatedImage = new System.Windows.Forms.PictureBox();
             this.OriginalImage = new System.Windows.Forms.PictureBox();
@@ -108,15 +108,16 @@
             this.ImagePathBox.Size = new System.Drawing.Size(554, 20);
             this.ImagePathBox.TabIndex = 8;
             // 
-            // Download
+            // DownloadButton
             // 
-            this.Download.Location = new System.Drawing.Point(618, 458);
-            this.Download.Name = "Download";
-            this.Download.Size = new System.Drawing.Size(75, 23);
-            this.Download.TabIndex = 9;
-            this.Download.Text = "다운로드";
-            this.Download.UseVisualStyleBackColor = true;
-            this.Download.Click += new System.EventHandler(this.Download_Click);
+            this.DownloadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DownloadButton.Location = new System.Drawing.Point(618, 458);
+            this.DownloadButton.Name = "DownloadButton";
+            this.DownloadButton.Size = new System.Drawing.Size(75, 23);
+            this.DownloadButton.TabIndex = 9;
+            this.DownloadButton.Text = "다운로드";
+            this.DownloadButton.UseVisualStyleBackColor = true;
+            this.DownloadButton.Click += new System.EventHandler(this.Download_Click);
             // 
             // Degree
             // 
@@ -131,6 +132,7 @@
             // RotatedImage
             // 
             this.RotatedImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.RotatedImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.RotatedImage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RotatedImage.Location = new System.Drawing.Point(393, 143);
             this.RotatedImage.Name = "RotatedImage";
@@ -142,6 +144,7 @@
             // OriginalImage
             // 
             this.OriginalImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.OriginalImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.OriginalImage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.OriginalImage.Location = new System.Drawing.Point(58, 143);
             this.OriginalImage.Name = "OriginalImage";
@@ -157,7 +160,7 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(749, 498);
             this.Controls.Add(this.Degree);
-            this.Controls.Add(this.Download);
+            this.Controls.Add(this.DownloadButton);
             this.Controls.Add(this.ImagePathBox);
             this.Controls.Add(this.RotateDegreeNumericUpDown);
             this.Controls.Add(this.RotatedImageLabel);
@@ -167,9 +170,10 @@
             this.Controls.Add(this.Rotate);
             this.Controls.Add(this.Browse);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ImageRotationForm";
             this.Text = "ImageRotationForm";
+            this.Load += new System.EventHandler(this.ImageRotationForm_Load);
+            this.Resize += new System.EventHandler(this.ImageRotationForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.RotateDegreeNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RotatedImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OriginalImage)).EndInit();
@@ -188,7 +192,7 @@
         private System.Windows.Forms.Label RotatedImageLabel;
         private System.Windows.Forms.NumericUpDown RotateDegreeNumericUpDown;
         private System.Windows.Forms.TextBox ImagePathBox;
-        private System.Windows.Forms.Button Download;
+        private System.Windows.Forms.Button DownloadButton;
         private System.Windows.Forms.Label Degree;
     }
 }
