@@ -67,7 +67,7 @@
             // 
             this.OriginalImageLabel.AutoSize = true;
             this.OriginalImageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OriginalImageLabel.Location = new System.Drawing.Point(173, 117);
+            this.OriginalImageLabel.Location = new System.Drawing.Point(174, 117);
             this.OriginalImageLabel.Name = "OriginalImageLabel";
             this.OriginalImageLabel.Size = new System.Drawing.Size(74, 20);
             this.OriginalImageLabel.TabIndex = 4;
@@ -77,7 +77,7 @@
             // 
             this.RotatedImageLabel.AutoSize = true;
             this.RotatedImageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RotatedImageLabel.Location = new System.Drawing.Point(501, 117);
+            this.RotatedImageLabel.Location = new System.Drawing.Point(503, 117);
             this.RotatedImageLabel.Name = "RotatedImageLabel";
             this.RotatedImageLabel.Size = new System.Drawing.Size(86, 20);
             this.RotatedImageLabel.TabIndex = 5;
